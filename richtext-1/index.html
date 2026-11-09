@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; img-src 'none'; script-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      name="description"
+      content="The public definition of the TDSP document profile de.wappensc.together.format.richtext/1 for formatted text, with its test vectors."
+    />
+    <title>Rich text profile de.wappensc.together.format.richtext/1 – Together-Pad</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header>Together-Pad · Document formats</header>
+    <main>
+      <h1>Rich text: <code>de.wappensc.together.format.richtext/1</code></h1>
+
+      <dl class="facts">
+        <dt>Profile id</dt>
+        <dd><code>de.wappensc.together.format.richtext/1</code></dd>
+        <dt>Kind</dt>
+        <dd>A document profile of TDSP 2.0, the Together Document Sync Protocol</dd>
+        <dt>Status</dt>
+        <dd>
+          Draft of 22 October 2026. Until it is final, this definition may still change. Once final, it
+          changes only compatibly; an incompatible change would be a new profile id with a new major
+          version.
+        </dd>
+        <dt>Test vectors</dt>
+        <dd><a href="vectors.json">vectors.json</a></dd>
+        <dt>Repository</dt>
+        <dd><a href="https://github.com/wappensc/together-formats">github.com/wappensc/together-formats</a>, with this text and its vectors for every version</dd>
+        <dt>Terms</dt>
+        <dd>Anyone may implement this profile, without asking and without fee. Text and test vectors are under the MIT licence.</dd>
+        <dt>Maintained by</dt>
+        <dd>WappenSC, the maker of Together-Pad</dd>
+      </dl>
+
+      <section lang="de" class="note">
+        <p>
+          Diese Seite beschreibt das Format für formatierten Text, in dem Together-Pad Dokumente hält und
+          über einen Messenger abgleicht. Sie richtet sich an Entwicklerinnen und Entwickler, die es in
+          einem eigenen Programm lesen und schreiben wollen, und ist deshalb auf Englisch. Jede und jeder
+          darf das Format umsetzen, ohne zu fragen und ohne Gebühr.
+        </p>
+      </section>
+
+      <h2 id="overview">1. Overview</h2>
+      <p>
+        In <a href="https://github.com/wappensc/tdsp">TDSP</a>, a document's content travels as updates of
+        a CRDT, and the document's <em>profile</em> says what those bytes mean: which CRDT, which
+        structure, and how the content is projected to plain text for author attribution (TDSP §5). This
+        profile holds formatted text as a notes app knows it: paragraphs with styles (headings, code,
+        quotes, indentation), lists and checklists, character formats, links, line breaks within a
+        paragraph, images, and further embeds that later versions may add.
+      </p>
+      <p>
+        It is built on <a href="https://github.com/yjs/yjs">Yjs</a>. The whole content is <strong>one flat
+        text</strong>, a <code>Y.Text</code> named <code>content</code>, in which every paragraph ends with an
+        embedded map, the <em>paragraph end</em>, that holds the paragraph's attributes. Splitting or joining
+        paragraphs inserts or deletes a paragraph end and moves no text, so formats, positions that point
+        into the text, and what others type at the same moment all stay where they are.
+      </p>
+      <p>
+        MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119 and RFC 8174 when written in capitals.
+        <code>Y.Doc</code> is a Yjs document, and <code>Y.Text</code>, <code>Y.Map</code> and
+        <code>Y.Array</code> are its shared types, named as the JavaScript library of Yjs names them. An
+        implementation need not use that library: it interoperates if it reads and writes the encodings
+        below and merges as Yjs does.
+      </p>
+
+      <h2 id="prf-1">2. What TDSP asks of a profile</h2>
+      <p>
+        TDSP's requirement PRF-1 lists what every profile defines; PRF-7 asks a profile defined outside
+        TDSP to define each item publicly, with test vectors. Items 1 to 4 and 7 to 9 are the same as for
+        TDSP's own profile <code>yjs-paragraphs/1</code> (TDSP, Appendix A); they are restated here.
+      </p>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>PRF-1 item</th><th>In this profile</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Update</td>
+              <td>
+                A <strong>Yjs update in encoding version 1</strong>, as <code>Y.encodeStateAsUpdate</code> writes
+                and <code>Y.applyUpdate</code> reads it (not the <code>…V2</code> functions). A full state and an
+                incremental change are the same format. Updates applied in any order, with duplicates, yield the
+                same state; an update whose predecessors are missing is held, not rejected.
+              </td>
+            </tr>
+            <tr>
+              <td>2. Missing predecessors</td>
+              <td>
+                Yjs holds such an update as pending (<code>store.pendingStructs</code>,
+                <code>store.pendingDs</code>); the Yjs client ids it carries name whose updates they are. What they
+                take is the byte length of the pending structs' update plus that of the pending delete set; giving
+                them up clears both, as if those updates had never arrived, so that an update that brings them
+                again applies as any other.
+              </td>
+            </tr>
+            <tr>
+              <td>3. State vector</td>
+              <td>
+                A <strong>Yjs state vector</strong> as <code>Y.encodeStateVector</code> writes it. An empty
+                document's is the single byte <code>00</code> (Base64 <code>AA==</code>).
+              </td>
+            </tr>
+            <tr>
+              <td>4. What a state vector lacks</td>
+              <td>
+                The structs the replica applied from each client's clock in the state vector on, and the delete
+                set of its applied items, as <code>Y.encodeStateAsUpdate(doc, stateVector)</code> writes them;
+                nothing it holds for missing predecessors (item 2), which that function adds while Yjs holds any.
+                With the empty state vector, byte for byte the full state. The <strong>update that holds
+                nothing</strong>, the full state of an empty <code>Y.Doc</code>, is the two bytes
+                <code>00 00</code> (Base64 <code>AAA=</code>).
+              </td>
+            </tr>
+            <tr>
+              <td>5. Initial state</td>
+              <td>
+                One paragraph end without other keys, the only unit of <code>content</code>: one empty paragraph
+                (<a href="#structure">section 3</a>). The creator seeds it in one change.
+              </td>
+            </tr>
+            <tr>
+              <td>6. Plain-text projection</td>
+              <td>
+                Each unit of <code>content</code> as one character, the document's last paragraph end as none
+                (<a href="#projection">section 6</a>). Offsets count <strong>UTF-16 code units</strong>.
+              </td>
+            </tr>
+            <tr>
+              <td>7. Splitting into pieces; indivisible units</td>
+              <td>
+                Each piece a Yjs update in encoding version 1 holding one contiguous run of one client's structs,
+                or a part of the delete set. A run is cut between structs and, where a struct alone is too large,
+                inside it: the prefix written as a shortened copy, the suffix as Yjs writes any partial struct;
+                text is never cut inside a UTF-16 surrogate pair. Indivisible is content of length one: an
+                embedded map, a value in a map or an array (such as an image's preview or one part of its
+                original), a format, a shared type. Its encoded struct must fit a piece: (<code>maxBytes</code> − the other
+                fields of an <code>edit</code> frame) × 3/4 bytes, about 3.1 MB at 4 MiB. Writers keep binaries
+                far below that (<a href="#limits">section 9</a>). Text is never such a unit.
+              </td>
+            </tr>
+            <tr>
+              <td>8. What a replica deleted</td>
+              <td>
+                The update of no structs and the delete set of the items the replica applied, nothing it holds
+                for missing predecessors (item 2), as <code>Y.encodeStateAsUpdate(doc, Y.encodeStateVector(doc))</code>
+                writes it in encoding version 1 while Yjs holds nothing pending:
+                <code>00</code> for no structs, the number of clients, and for each client in descending order of
+                its id: the id, the number of its ranges, and each range's clock and length, ascending and merged;
+                every number a variable-length unsigned integer. A document that deleted nothing gives
+                <code>00 00</code>. Of the items a given state vector counts: the same, with each client's ranges
+                cut at that client's clock in the state vector, and a client left without ranges left out.
+              </td>
+            </tr>
+            <tr>
+              <td>9. Reading without applying</td>
+              <td>
+                An update is read as <code>Y.decodeUpdate</code> reads it, every struct and the whole delete set,
+                and ends where its delete set ends; a state vector is read as <code>Y.decodeStateVector</code>
+                reads it and ends after its last entry. Bytes with anything after that are neither.
+              </td>
+            </tr>
+            <tr>
+              <td>Layers</td>
+              <td>
+                Admitted: top-level shared types beside <code>content</code>, each named by a layer id
+                (<a href="#layers">section 10</a>).
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="structure">3. Structure</h2>
+      <ul>
+        <li>
+          A document MUST keep all its content in one <code>Y.Text</code> named <code>content</code>. A
+          <strong>unit</strong> of <code>content</code> is one UTF-16 code unit of its text, or one embedded
+          value; Yjs counts an embed as length one.
+        </li>
+        <li>
+          A <strong>paragraph end</strong> is an embedded <code>Y.Map</code> whose key <code>type</code> holds
+          the string <code>"paragraph"</code>. Its other keys are the attributes of its paragraph
+          (<a href="#paragraph-attributes">section 4.1</a>). A paragraph is the units after the previous
+          paragraph end, or from the start, up to its own end.
+        </li>
+        <li>
+          A document MUST end with a paragraph end, and a writer inserts text before it, never after it.
+        </li>
+        <li>
+          A <strong>line break</strong> within a paragraph is the character U+000A (line feed) in the text.
+        </li>
+        <li>
+          Every other embedded value is an <strong>embed</strong> (<a href="#embeds">section 5</a>): a
+          <code>Y.Map</code> with a string <code>type</code> other than <code>"paragraph"</code> and a string
+          <code>fallback</code>.
+        </li>
+        <li>
+          Characters and embeds carry their formats as Yjs text attributes
+          (<a href="#formats">section 4.2</a>).
+        </li>
+        <li>
+          Beside <code>content</code>, a document MUST NOT hold a top-level shared type except a layer, named
+          by its layer id.
+        </li>
+      </ul>
+      <p>
+        A receiver MUST NOT reject an update because what it holds breaks this structure, and MUST apply it
+        like any other: a CRDT cannot refuse part of the state everyone else converges to. The projection
+        (<a href="#projection">section 6</a>) is defined for any content, and a reader shows what breaks the
+        structure as follows. Text after the last paragraph end is a paragraph of its own, without an end, in
+        body text. An embedded value that is no <code>Y.Map</code>, or a <code>Y.Map</code> without a string
+        <code>type</code>, is a placeholder, with the map's <code>fallback</code> where it has one. A top-level type beside <code>content</code> that no
+        layer id names is not in the projection, and a change of it counts as a change of the content (TDSP
+        LAY-6). A reader always reads <code>content</code> as a <code>Y.Text</code>.
+      </p>
+      <p>Example: a heading, a paragraph of two lines, and an empty last paragraph, as a Yjs delta:</p>
+      <pre><code>[ { insert: "Shopping" },
+  { insert: Y.Map { type: "paragraph", block: "h1" } },
+  { insert: "Milk\nBread" },
+  { insert: Y.Map { type: "paragraph" } },
+  { insert: Y.Map { type: "paragraph" } } ]</code></pre>
+
+      <h2 id="attributes">4. Attributes</h2>
+      <h3 id="paragraph-attributes">4.1 Paragraph attributes: keys of the paragraph end</h3>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>Key</th><th>Values</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>block</code></td>
+              <td>absent</td>
+              <td>Body text</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><code>"h1"</code> to <code>"h6"</code></td>
+              <td>A heading of level 1 to 6</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><code>"code"</code></td>
+              <td>A line of monospaced text; consecutive ones form a code block</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><code>"bullet"</code>, <code>"dash"</code>, <code>"ordered"</code>, <code>"check"</code></td>
+              <td>A list item: with a bullet, with a dash, numbered, or a checklist item with a checkbox</td>
+            </tr>
+            <tr>
+              <td><code>indent</code></td>
+              <td>an integer from 1 to 8; absent is 0</td>
+              <td>The indentation level of a list item or of body text</td>
+            </tr>
+            <tr>
+              <td><code>checked</code></td>
+              <td><code>true</code>; absent is not</td>
+              <td>A checklist item is done</td>
+            </tr>
+            <tr>
+              <td><code>start</code></td>
+              <td>an integer from 0 to 999 999 999</td>
+              <td>The number of an ordered list's first item, set on that item</td>
+            </tr>
+            <tr>
+              <td><code>quote</code></td>
+              <td><code>true</code></td>
+              <td>The paragraph is quoted, whatever its <code>block</code></td>
+            </tr>
+            <tr>
+              <td><code>table</code>, <code>row</code>, <code>col</code></td>
+              <td>reserved for tables</td>
+              <td>
+                A paragraph end with <code>table</code> ends a table cell. Version 1 defines only how cells
+                project (<a href="#projection">section 6</a>); until tables are defined further, a reader shows
+                each cell as a paragraph and a writer does not write these keys.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        One key <code>block</code> holds every style rather than a key per style: when two people set
+        different styles on one paragraph at the same moment, one value wins, as for any key of a
+        <code>Y.Map</code>, and no reader needs a rule for which style counts.
+      </p>
+
+      <h3 id="formats">4.2 Character formats: Yjs text attributes</h3>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>Attribute</th><th>Value</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bold</code>, <code>italic</code>, <code>underline</code>, <code>strike</code></td>
+              <td><code>true</code></td>
+              <td>Bold, italic, underlined, struck through</td>
+            </tr>
+            <tr>
+              <td><code>code</code></td>
+              <td><code>true</code></td>
+              <td>Inline code, in a monospaced font</td>
+            </tr>
+            <tr>
+              <td><code>link</code></td>
+              <td>the address, a string that is not empty</td>
+              <td>A link</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        An absent attribute, or one set to <code>null</code> (as Yjs removes a format), means unformatted.
+        Formats apply to characters and embeds alike. A format on a paragraph end means nothing, and a reader
+        ignores it: it arises when someone formats a range while someone else inserts a paragraph end in it.
+      </p>
+      <p>
+        <strong>Links.</strong> A reader MUST NOT load anything for a link, SHOULD open one only when the
+        person asks for it (by a click, say), and SHOULD open only these addresses: the value without the
+        spaces at its ends, with no control character (U+0000 to U+001F, U+007F to U+009F), whose scheme
+        (the letters, digits, <code>+</code>, <code>.</code> and <code>-</code> before the first colon,
+        beginning with a letter, in any case) is <code>https</code> or <code>http</code> and continues after
+        the colon with <code>//</code> and a character that is no <code>/</code>, <code>?</code>,
+        <code>#</code> or white space, or is <code>mailto</code> and continues with something other than
+        white space. It shows any other link as text, and keeps its value.
+      </p>
+
+      <h2 id="embeds">5. Embeds</h2>
+      <p>
+        An embed is a unit of a paragraph, like a character: an image alone on a line is a paragraph that
+        holds one embed. Every embed is a <code>Y.Map</code> with at least:
+      </p>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>Key</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>type</code></td><td>A string other than <code>"paragraph"</code>: what kind of embed it is</td></tr>
+            <tr><td><code>fallback</code></td><td>A string: what a reader that does not know the type shows in its place</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Version 1 defines one type, <code>"image"</code>. A reader that does not know an embed's type shows
+        its <code>fallback</code> as a placeholder and keeps the embed unchanged.
+      </p>
+
+      <h3 id="image">5.1 The image type</h3>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>Key</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>type</code></td><td><code>"image"</code></td></tr>
+            <tr>
+              <td><code>fallback</code></td>
+              <td>Shown by a reader that cannot show the image; writers use its file name in square brackets, such as <code>"[photo.jpg]"</code></td>
+            </tr>
+            <tr><td><code>mime</code></td><td><code>"image/jpeg"</code> or <code>"image/png"</code>: the format of the original</td></tr>
+            <tr><td><code>name</code></td><td>The file name, or <code>""</code></td></tr>
+            <tr><td><code>width</code>, <code>height</code></td><td>The original's size in pixels, integers greater than 0</td></tr>
+            <tr><td><code>size</code></td><td>The original's length in bytes, an integer greater than 0</td></tr>
+            <tr><td><code>sha256</code></td><td>The SHA-256 of the original, 64 lowercase hexadecimal digits</td></tr>
+            <tr>
+              <td><code>preview</code></td>
+              <td>Binary (a Yjs <code>Uint8Array</code>): a JPEG of the image, its longest edge at most 640 pixels, at most 64 000 bytes</td>
+            </tr>
+            <tr>
+              <td><code>parts</code></td>
+              <td>A <code>Y.Array</code> of binaries that, joined in order, are the original</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>Reading.</strong> A reader shows the preview until the original is complete — the lengths of
+        the parts add up to <code>size</code>, and the SHA-256 of the parts joined is <code>sha256</code> —
+        and the original from then on. An image embed that lacks one of these keys, or holds a value of
+        another kind or a <code>mime</code> not listed, is shown by its <code>fallback</code> and kept, like an
+        embed of unknown type: a further image format would come as a new value of <code>mime</code>, which
+        older readers show by the fallback. Keys beyond these are kept and ignored.
+      </p>
+      <p>
+        <strong>Writing.</strong> A writer inserts the embed with its metadata, its preview and an empty
+        <code>parts</code> first, and then appends the parts, each in a change of its own: everyone sees the
+        preview soon, and no single change is larger than a part. A writer SHOULD encode an image anew before
+        it inserts it, without metadata such as the place where a photo was taken.
+      </p>
+
+      <h2 id="projection">6. Plain-text projection</h2>
+      <p>
+        TDSP attributes text to its authors by offsets into a plain-text projection, which every
+        implementation must compute to the same character (TDSP §5.4). The projection of this profile is the
+        units of <code>content</code> in order, each as:
+      </p>
+      <ul>
+        <li>a character: itself, a line break included;</li>
+        <li>
+          a paragraph end: a line feed U+000A; a tab U+0009 instead when it ends a table cell (it has a key
+          <code>table</code>) and the next paragraph end after it ends a cell of the same table and row (equal
+          values of <code>table</code> and of <code>row</code>); and nothing at all when it is the last unit
+          of <code>content</code>;
+        </li>
+        <li>any other embedded value: one U+FFFC (object replacement character).</li>
+      </ul>
+      <p>
+        Offsets count UTF-16 code units. Two values of <code>table</code> or <code>row</code> are equal when
+        they are the same string, the same number (0 equals −0; NaN equals nothing), the same big integer, the
+        same boolean, or both <code>null</code>; maps, arrays, binaries and other JSON objects never equal
+        another value. A key whose value is Yjs's <code>undefined</code> counts as absent, and two absent
+        values of <code>row</code> are equal. Formats, paragraph
+        attributes, list markers, checkboxes and list numbers add nothing; layers and other top-level types
+        are never part of the projection (TDSP LAY-3).
+      </p>
+      <p>
+        So every position of the projection is the same position in <code>content</code>, and the
+        projection is one character shorter than <code>content</code> whenever the document ends, as it
+        should, with a paragraph end. The last paragraph end projects nothing so that the initial state
+        projects the empty text, as one empty paragraph does in <code>yjs-paragraphs/1</code>, and so that
+        every character of the projection comes from a change someone made and can be attributed.
+      </p>
+      <p>
+        Example: <code>"Title"</code>, an end with <code>block: "h1"</code>, <code>"A"</code> and
+        <code>"B"</code> each ending a cell of row <code>"r1"</code> of table <code>"t1"</code>,
+        <code>"Photo: "</code>, an image, the last end — 19 units — project to the 18 characters
+        <code>"Title\nA\tB\nPhoto: ￼"</code>.
+      </p>
+
+      <h2 id="reader">7. What a reader shows</h2>
+      <p>So that every implementation shows the same document, a reader normalizes each paragraph:</p>
+      <ul>
+        <li>
+          <code>block</code> counts only with a value of <a href="#paragraph-attributes">section 4.1</a>; any
+          other value shows body text.
+        </li>
+        <li>
+          <code>indent</code> counts only on list items and body text, and only as an integer from 1 to 8;
+          otherwise the paragraph is not indented.
+        </li>
+        <li><code>checked</code> counts only on a <code>"check"</code> item, and only as <code>true</code>.</li>
+        <li><code>quote</code> counts only as <code>true</code>.</li>
+        <li>
+          <code>start</code> counts only on an <code>"ordered"</code> item, as an integer from 0 to
+          999 999 999, and only where that item begins a list.
+        </li>
+        <li>A value that does not count is ignored for showing and stays in the document.</li>
+      </ul>
+      <p>
+        <strong>List numbers.</strong> Going through the paragraphs in order, a reader keeps, for each indent,
+        the next number of the ordered list open at that indent:
+      </p>
+      <ul>
+        <li>a paragraph that is no list item closes every list;</li>
+        <li>a list item at indent <var>n</var> closes the lists at indents deeper than <var>n</var>;</li>
+        <li>a list item at indent <var>n</var> that is not <code>"ordered"</code> also closes the list at <var>n</var>, and shows no number;</li>
+        <li>
+          an <code>"ordered"</code> item at indent <var>n</var> shows the next number of the list open at
+          <var>n</var>; if none is open, it begins one with its own <code>start</code> where that counts, else
+          1; the list's next number is then one more.
+        </li>
+      </ul>
+      <p>
+        So consecutive ordered items of one indent form a list, deeper items nest without ending it, and a
+        quote does not end a list.
+      </p>
+
+      <h2 id="extension">8. What a reader does not know</h2>
+      <p>
+        Version 1 can grow without a new profile id: later versions of this definition may add paragraph
+        keys, values, formats and embed types, compatibly. Therefore:
+      </p>
+      <ul>
+        <li>
+          A reader MUST keep what it does not know and pass it on unchanged: unknown keys and values of a
+          paragraph end, unknown formats and unknown values of known formats, embeds of an unknown type, and
+          image embeds it cannot read. It shows an unknown paragraph style as body text, an unknown format as
+          none, and an unknown embed by its <code>fallback</code>.
+        </li>
+        <li>
+          A writer MUST write only what the person changed: the same characters with other formats by
+          <code>Y.Text.format</code> with the changed attributes only, a paragraph's attributes by setting or
+          deleting the changed keys of its end only. It MUST NOT rewrite a paragraph end, an embed or a run of
+          text that the person did not change.
+        </li>
+        <li>
+          A writer MUST NOT delete an embed of a type it does not know, except as part of a selection the
+          person deletes, and SHOULD tell the person before that that the selection holds something it cannot
+          show.
+        </li>
+        <li>
+          Only this definition adds paragraph keys, values, formats and embed types; a writer writes only
+          those it defines. The name <code>example</code> — as an embed type, a paragraph key or value, a
+          format — and the image format <code>image/example</code> will never be defined: the test vectors use
+          them for what a reader does not know.
+        </li>
+      </ul>
+
+      <h2 id="limits">9. Writing, and its limits</h2>
+      <ul>
+        <li>
+          A writer gives every insertion its formats explicitly, an empty set included: Yjs's
+          <code>Y.Text.insert</code> without attributes takes over the formats of the character before it.
+        </li>
+        <li>
+          A new paragraph is a new paragraph end, a <code>Y.Map</code> of its own. Splitting a paragraph inserts
+          one; joining two deletes the end between them, and the joined paragraph keeps the attributes of the
+          end that remains.
+        </li>
+        <li>
+          <strong>Limits</strong>, checked by a writer when it writes: an image's original at most 1 000 000
+          bytes, its preview at most 64 000 bytes, each part at most 1 000 000 bytes; a document at most
+          10 000 000 bytes, counted as the length of its full state as one update (PRF-1 item 4, with the empty
+          state vector) as a replica that loaded it afresh encodes it, that is without deleted content that
+          only an undo history still holds. The document's limit is checked when an image goes in: a writer
+          does not insert an image that would take the document over it.
+        </li>
+        <li>
+          A reader accepts every document and every image, whatever its size, so that a later version can
+          raise the limits.
+        </li>
+      </ul>
+
+      <h2 id="layers">10. Layers</h2>
+      <p>
+        This profile admits layers (TDSP §5.6): data beside the content, each a top-level shared type named by
+        its layer id, such as comments. A layer is never part of the projection and never changes
+        attribution. A layer that points into the content SHOULD do so by Yjs relative positions into
+        <code>content</code>; since splitting and joining paragraphs moves no text, such positions keep their
+        place.
+      </p>
+
+      <h2 id="vectors">11. Test vectors</h2>
+      <p>
+        <a href="vectors.json">vectors.json</a> holds the test vectors PRF-7 asks for. For each vector:
+      </p>
+      <ul>
+        <li><code>updates</code>: Yjs updates in encoding version 1, Base64, in the order they were made;</li>
+        <li>
+          <code>content</code>: the delta of the <code>Y.Text</code> <code>content</code> after applying them,
+          a run of characters as a string and an embedded value as one <code>insert</code>, with the run's
+          formats as <code>attributes</code>. In values, a <code>Y.Map</code> is
+          <code>{"map": {…}}</code> with its keys sorted, a <code>Y.Array</code> <code>{"array": […]}</code>,
+          binary data <code>{"binary": "&lt;Base64&gt;"}</code>, and any other JSON value Yjs stores
+          <code>{"json": …}</code>;
+        </li>
+        <li><code>beside</code>: the names of the top-level shared types other than <code>content</code>;</li>
+        <li>
+          <code>projection</code> and <code>projectionLength</code>, its length in UTF-16 code units;
+        </li>
+        <li>
+          <code>stateVector</code> and <code>deleted</code> (PRF-1 items 3 and 8), Base64, byte for byte;
+          <code>state</code>, the result as one update as Yjs encodes it — another encoder may group items
+          differently, but applied to an empty document its update must give the same content;
+        </li>
+        <li>
+          <code>paragraphs</code>: what a reader shows of each paragraph (<a href="#reader">section 7</a>):
+          its text with each embed as U+FFFC, <code>block</code> (<code>null</code> for body text),
+          <code>indent</code>, <code>checked</code>, <code>quote</code>, and <code>number</code> for an
+          ordered item;
+        </li>
+        <li>
+          <code>images</code>, where there are any: for each embed of type <code>"image"</code>, its unit in
+          <code>content</code> and what a reader shows: <code>"original"</code>, <code>"preview"</code> or
+          <code>"fallback"</code>.
+        </li>
+      </ul>
+      <p>
+        An implementation passes a vector when its updates, applied to an empty document in any order and
+        with duplicates, give that content, projection, state vector, deletions and reader view.
+      </p>
+      <div class="table">
+        <table>
+          <thead>
+            <tr><th>Vector</th><th>Shows</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>initial-state</code></td><td>The initial state; it projects the empty text</td></tr>
+            <tr><td><code>paragraphs</code></td><td>Paragraph ends; the last one projects nothing</td></tr>
+            <tr><td><code>line-break</code></td><td>A line break within a paragraph</td></tr>
+            <tr><td><code>paragraph-styles</code></td><td>Headings, code, quote, indented body text; a change of attributes alone</td></tr>
+            <tr><td><code>lists</code></td><td>Checklists, bullets, dashes, numbered lists with <code>start</code> and nesting; list numbers</td></tr>
+            <tr><td><code>formats</code></td><td>Every format, links that open and one that does not</td></tr>
+            <tr><td><code>embed</code></td><td>An embed of unknown type, its fallback and U+FFFC</td></tr>
+            <tr><td><code>image</code></td><td>An image with metadata, preview and its original in two parts; shown as the original</td></tr>
+            <tr><td><code>image-parts-missing</code></td><td>The same image before its parts arrive; shown as the preview</td></tr>
+            <tr><td><code>unknown-and-out-of-range</code></td><td>Unknown keys, values, formats and image formats kept; values out of range; a format on a paragraph end</td></tr>
+            <tr><td><code>table-cells</code></td><td>Cell ends projected as tab or line feed</td></tr>
+            <tr><td><code>concurrent</code></td><td>Three writers; concurrent insertions and styles converge</td></tr>
+            <tr><td><code>deletions</code></td><td>Deleted text, and two paragraphs joined; the canonical encoding of deletions</td></tr>
+            <tr><td><code>utf-16</code></td><td>Offsets in UTF-16 code units</td></tr>
+            <tr><td><code>beside-content</code></td><td>A layer, and a top-level type that breaks the structure; neither projected</td></tr>
+            <tr><td><code>after-the-last-end</code></td><td>Text after the last paragraph end, which breaks the structure</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="versions">12. Versions</h2>
+      <p>Version 1, draft of 22 October 2026.</p>
+    </main>
+    <footer>
+      <a href="https://www.wappensc.de/impressum.html" hreflang="de">Impressum (Legal notice)</a>
+      ·
+      <a href="https://www.wappensc.de/datenschutz.html" hreflang="de">Datenschutz (Privacy)</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1536 @@
+{
+  "profile": "de.wappensc.together.format.richtext/1",
+  "definition": "https://together-pad.com/formats/richtext-1/",
+  "about": [
+    "Test vectors of the document profile de.wappensc.together.format.richtext/1, defined at the address under definition.",
+    "updates: Yjs updates in encoding version 1, Base64. Applied to an empty Yjs document in any order, with duplicates, they yield the state described here.",
+    "state: that state as one update; stateVector: its state vector; deleted: the canonical encoding of what it deleted; all Base64.",
+    "content: the delta of the Y.Text content. A run of characters is a string, an embedded value one insert. In values, a Y.Map is {\"map\": {...}} with its keys sorted, a Y.Array {\"array\": [...]}, bytes {\"binary\": \"<Base64>\"}, any other JSON value Yjs stores {\"json\": ...}. attributes are the run's formats.",
+    "beside: the names of the top-level shared types other than content.",
+    "projection: the plain-text projection; projectionLength: its length in UTF-16 code units.",
+    "paragraphs: what a reader shows of each paragraph after normalization: its text (an embed as U+FFFC), block (null for body text), indent, checked, quote, and the number of an ordered list item.",
+    "images: for each embed of type image, its unit in content and what a reader shows: the original, the preview, or the fallback."
+  ],
+  "vectors": [
+    {
+      "name": "initial-state",
+      "description": "The initial state a creator seeds a new document with: one paragraph end without other keys, that is one empty paragraph. It projects to nothing, since the document's last paragraph end never counts.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA=="
+      ],
+      "state": "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+      "stateVector": "AQEC",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "",
+      "projectionLength": 0,
+      "paragraphs": [
+        {
+          "text": "",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "paragraphs",
+      "description": "Two paragraphs. A writer inserts text before the document's last paragraph end and starts a new paragraph by inserting a paragraph end; the first end projects to a line feed, the last to nothing.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQQBAkQBAAVIZWxsb8cBBgEAASgAAQcEdHlwZQF3CXBhcmFncmFwaMQBBwEABXdvcmxkAA==",
+        "AQEBDsQBBgEHASwA"
+      ],
+      "state": "AQcBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABUhlbGxvxwEGAQABKAABBwR0eXBlAXcJcGFyYWdyYXBoxAEHAQAFd29ybGTEAQYBBwEsAA==",
+      "stateVector": "AQEP",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Hello,"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "world"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Hello,\nworld",
+      "projectionLength": 12,
+      "paragraphs": [
+        {
+          "text": "Hello,",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "world",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "line-break",
+      "description": "A line break within a paragraph is the character U+000A in the text. It projects to itself, as a paragraph end does; the reader still sees two paragraphs, the first of two lines.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQQBAkQBACBSb3NlcyBhcmUgcmVkLAp2aW9sZXRzIGFyZSBibHVlLscBIQEAASgAASIEdHlwZQF3CXBhcmFncmFwaMQBIgEABE5leHQA"
+      ],
+      "state": "AQYBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEAIFJvc2VzIGFyZSByZWQsCnZpb2xldHMgYXJlIGJsdWUuxwEhAQABKAABIgR0eXBlAXcJcGFyYWdyYXBoxAEiAQAETmV4dAA=",
+      "stateVector": "AQEo",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Roses are red,\nviolets are blue."
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Next"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Roses are red,\nviolets are blue.\nNext",
+      "projectionLength": 37,
+      "paragraphs": [
+        {
+          "text": "Roses are red,\nviolets are blue.",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Next",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "paragraph-styles",
+      "description": "Paragraph styles are keys of the paragraph end: block for headings h1 to h6 and code, quote, and indent, which also applies to body text. The last change sets indent on an existing paragraph end, a change of that Y.Map alone; the projection does not change.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "ARwBAkQBAAVUaXRsZccBBgEAASgAAQcFYmxvY2sBdwJoMSgAAQcEdHlwZQF3CXBhcmFncmFwaMQBBwEAB0hlYWRpbmfHARABAAEoAAERBWJsb2NrAXcCaDIoAAERBHR5cGUBdwlwYXJhZ3JhcGjEAREBAApTdWJoZWFkaW5nxwEdAQABKAABHgVibG9jawF3AmgzKAABHgR0eXBlAXcJcGFyYWdyYXBoxAEeAQAJTGV2ZWwgc2l4xwEpAQABKAABKgVibG9jawF3Amg2KAABKgR0eXBlAXcJcGFyYWdyYXBoxAEqAQAJQm9keSB0ZXh0xwE1AQABKAABNgR0eXBlAXcJcGFyYWdyYXBoxAE2AQAJbGV0IHggPSAxxwFAAQABKAABQQVibG9jawF3BGNvZGUoAAFBBHR5cGUBdwlwYXJhZ3JhcGjEAUEBAA1BIHF1b3RlZCBsaW5lxwFQAQABKAABUQVxdW90ZQF4KAABUQR0eXBlAXcJcGFyYWdyYXBoxAFRAQANSW5kZW50ZWQgdGV4dAA=",
+        "AQEBYSgAAQAGaW5kZW50AX0BAA=="
+      ],
+      "state": "AR8BAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABVRpdGxlxwEGAQABKAABBwVibG9jawF3AmgxKAABBwR0eXBlAXcJcGFyYWdyYXBoxAEHAQAHSGVhZGluZ8cBEAEAASgAAREFYmxvY2sBdwJoMigAAREEdHlwZQF3CXBhcmFncmFwaMQBEQEAClN1YmhlYWRpbmfHAR0BAAEoAAEeBWJsb2NrAXcCaDMoAAEeBHR5cGUBdwlwYXJhZ3JhcGjEAR4BAAlMZXZlbCBzaXjHASkBAAEoAAEqBWJsb2NrAXcCaDYoAAEqBHR5cGUBdwlwYXJhZ3JhcGjEASoBAAlCb2R5IHRleHTHATUBAAEoAAE2BHR5cGUBdwlwYXJhZ3JhcGjEATYBAAlsZXQgeCA9IDHHAUABAAEoAAFBBWJsb2NrAXcEY29kZSgAAUEEdHlwZQF3CXBhcmFncmFwaMQBQQEADUEgcXVvdGVkIGxpbmXHAVABAAEoAAFRBXF1b3RlAXgoAAFRBHR5cGUBdwlwYXJhZ3JhcGjEAVEBAA1JbmRlbnRlZCB0ZXh0KAABAAZpbmRlbnQBfQEA",
+      "stateVector": "AQFi",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Title"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "h1",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Heading"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "h2",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Subheading"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "h3",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Level six"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "h6",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Body text"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "let x = 1"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "code",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A quoted line"
+        },
+        {
+          "insert": {
+            "map": {
+              "quote": true,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Indented text"
+        },
+        {
+          "insert": {
+            "map": {
+              "indent": 1,
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Title\nHeading\nSubheading\nLevel six\nBody text\nlet x = 1\nA quoted line\nIndented text",
+      "projectionLength": 82,
+      "paragraphs": [
+        {
+          "text": "Title",
+          "block": "h1",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Heading",
+          "block": "h2",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Subheading",
+          "block": "h3",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Level six",
+          "block": "h6",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Body text",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "let x = 1",
+          "block": "code",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A quoted line",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": true,
+          "number": null
+        },
+        {
+          "text": "Indented text",
+          "block": null,
+          "indent": 1,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "lists",
+      "description": "List items: checklist items, done or not, bullets, dashes and ordered items, nested by indent. Numbers follow the numbering rule: start counts at a list's first item, a deeper item nests and does not end the list, a paragraph that is no list item ends it. List markers and checkboxes project to nothing; the last paragraph is empty body text.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "ATUBAkQBAARNaWxrxwEFAQABKAABBgVibG9jawF3BWNoZWNrKAABBgdjaGVja2VkAXgoAAEGBHR5cGUBdwlwYXJhZ3JhcGjEAQYBAAVCcmVhZMcBDgEAASgAAQ8FYmxvY2sBdwVjaGVjaygAAQ8EdHlwZQF3CXBhcmFncmFwaMQBDwEACEEgYnVsbGV0xwEZAQABKAABGgVibG9jawF3BmJ1bGxldCgAARoEdHlwZQF3CXBhcmFncmFwaMQBGgEAEEEgZGFzaCwgaW5kZW50ZWTHASwBAAEoAAEtBWJsb2NrAXcEZGFzaCgAAS0GaW5kZW50AX0BKAABLQR0eXBlAXcJcGFyYWdyYXBoxAEtAQAFVGhpcmTHATUBAAEoAAE2BWJsb2NrAXcHb3JkZXJlZCgAATYFc3RhcnQBfQMoAAE2BHR5cGUBdwlwYXJhZ3JhcGjEATYBAAZGb3VydGjHAT8BAAEoAAFABWJsb2NrAXcHb3JkZXJlZCgAAUAEdHlwZQF3CXBhcmFncmFwaMQBQAEACk5lc3RlZCBvbmXHAUwBAAEoAAFNBWJsb2NrAXcHb3JkZXJlZCgAAU0GaW5kZW50AX0BKAABTQR0eXBlAXcJcGFyYWdyYXBoxAFNAQAKTmVzdGVkIHR3b8cBWgEAASgAAVsFYmxvY2sBdwdvcmRlcmVkKAABWwZpbmRlbnQBfQEoAAFbBHR5cGUBdwlwYXJhZ3JhcGjEAVsBAAVGaWZ0aMcBYwEAASgAAWQFYmxvY2sBdwdvcmRlcmVkKAABZAR0eXBlAXcJcGFyYWdyYXBoxAFkAQAXQm9keSB0ZXh0IGVuZHMgdGhlIGxpc3THAX0BAAEoAAF+BHR5cGUBdwlwYXJhZ3JhcGjEAX4BAAlPbmUgYWdhaW7HAYgBAQABKAABiQEFYmxvY2sBdwdvcmRlcmVkKAABiQEEdHlwZQF3CXBhcmFncmFwaMQBiQEBAA1BIHF1b3RlZCBpdGVtxwGYAQEAASgAAZkBBWJsb2NrAXcGYnVsbGV0KAABmQEFcXVvdGUBeCgAAZkBBHR5cGUBdwlwYXJhZ3JhcGgA"
+      ],
+      "state": "ATcBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABE1pbGvHAQUBAAEoAAEGBWJsb2NrAXcFY2hlY2soAAEGB2NoZWNrZWQBeCgAAQYEdHlwZQF3CXBhcmFncmFwaMQBBgEABUJyZWFkxwEOAQABKAABDwVibG9jawF3BWNoZWNrKAABDwR0eXBlAXcJcGFyYWdyYXBoxAEPAQAIQSBidWxsZXTHARkBAAEoAAEaBWJsb2NrAXcGYnVsbGV0KAABGgR0eXBlAXcJcGFyYWdyYXBoxAEaAQAQQSBkYXNoLCBpbmRlbnRlZMcBLAEAASgAAS0FYmxvY2sBdwRkYXNoKAABLQZpbmRlbnQBfQEoAAEtBHR5cGUBdwlwYXJhZ3JhcGjEAS0BAAVUaGlyZMcBNQEAASgAATYFYmxvY2sBdwdvcmRlcmVkKAABNgVzdGFydAF9AygAATYEdHlwZQF3CXBhcmFncmFwaMQBNgEABkZvdXJ0aMcBPwEAASgAAUAFYmxvY2sBdwdvcmRlcmVkKAABQAR0eXBlAXcJcGFyYWdyYXBoxAFAAQAKTmVzdGVkIG9uZccBTAEAASgAAU0FYmxvY2sBdwdvcmRlcmVkKAABTQZpbmRlbnQBfQEoAAFNBHR5cGUBdwlwYXJhZ3JhcGjEAU0BAApOZXN0ZWQgdHdvxwFaAQABKAABWwVibG9jawF3B29yZGVyZWQoAAFbBmluZGVudAF9ASgAAVsEdHlwZQF3CXBhcmFncmFwaMQBWwEABUZpZnRoxwFjAQABKAABZAVibG9jawF3B29yZGVyZWQoAAFkBHR5cGUBdwlwYXJhZ3JhcGjEAWQBABdCb2R5IHRleHQgZW5kcyB0aGUgbGlzdMcBfQEAASgAAX4EdHlwZQF3CXBhcmFncmFwaMQBfgEACU9uZSBhZ2FpbscBiAEBAAEoAAGJAQVibG9jawF3B29yZGVyZWQoAAGJAQR0eXBlAXcJcGFyYWdyYXBoxAGJAQEADUEgcXVvdGVkIGl0ZW3HAZgBAQABKAABmQEFYmxvY2sBdwZidWxsZXQoAAGZAQVxdW90ZQF4KAABmQEEdHlwZQF3CXBhcmFncmFwaAA=",
+      "stateVector": "AQGdAQ==",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Milk"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "check",
+              "checked": true,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Bread"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "check",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A bullet"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "bullet",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A dash, indented"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "dash",
+              "indent": 1,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Third"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "start": 3,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Fourth"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Nested one"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "indent": 1,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Nested two"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "indent": 1,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Fifth"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Body text ends the list"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "One again"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A quoted item"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "bullet",
+              "quote": true,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Milk\nBread\nA bullet\nA dash, indented\nThird\nFourth\nNested one\nNested two\nFifth\nBody text ends the list\nOne again\nA quoted item\n",
+      "projectionLength": 126,
+      "paragraphs": [
+        {
+          "text": "Milk",
+          "block": "check",
+          "indent": 0,
+          "checked": true,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Bread",
+          "block": "check",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A bullet",
+          "block": "bullet",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A dash, indented",
+          "block": "dash",
+          "indent": 1,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Third",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 3
+        },
+        {
+          "text": "Fourth",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 4
+        },
+        {
+          "text": "Nested one",
+          "block": "ordered",
+          "indent": 1,
+          "checked": false,
+          "quote": false,
+          "number": 1
+        },
+        {
+          "text": "Nested two",
+          "block": "ordered",
+          "indent": 1,
+          "checked": false,
+          "quote": false,
+          "number": 2
+        },
+        {
+          "text": "Fifth",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 5
+        },
+        {
+          "text": "Body text ends the list",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "One again",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 1
+        },
+        {
+          "text": "A quoted item",
+          "block": "bullet",
+          "indent": 0,
+          "checked": false,
+          "quote": true,
+          "number": null
+        },
+        {
+          "text": "",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "formats",
+      "description": "Character formats are Yjs text attributes: bold, italic, underline, strike and code with the value true, link with the address as text. A reader opens only https, http and mailto addresses and shows any other link as text, keeping its value. The last change makes \"bold\" italic too, with Y.Text.format; formats never change the projection.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AScBAkYBAARib2xkBHRydWXEAQIBAARib2xkxgEGAQAEYm9sZARudWxsxAEHAQABIMYBCAEABml0YWxpYwR0cnVlxAEJAQAGaXRhbGljxgEPAQAGaXRhbGljBG51bGzEARABAAEgxgERAQAEYm9sZAR0cnVlxgESAQAGaXRhbGljBHRydWXEARMBAARib3RoxgEXAQAEYm9sZARudWxsxgEYAQAGaXRhbGljBG51bGzEARkBAAEgxgEaAQAJdW5kZXJsaW5lBHRydWXEARsBAAl1bmRlcmxpbmXGASQBAAl1bmRlcmxpbmUEbnVsbMQBJQEAASDGASYBAAZzdHJpa2UEdHJ1ZcQBJwEABnN0cmlrZcYBLQEABnN0cmlrZQRudWxsxAEuAQABIMYBLwEABGNvZGUEdHJ1ZcQBMAEABGNvZGXGATQBAARjb2RlBG51bGzHATUBAAEoAAE2BHR5cGUBdwlwYXJhZ3JhcGjEATYBAAJBIMYBOQEABGxpbmsWImh0dHBzOi8vZXhhbXBsZS5jb20vIsQBOgEACHdlYiBsaW5rxgFCAQAEbGluawRudWxsxAFDAQAELCBhIMYBRwEABGxpbmscIm1haWx0bzpzb21lb25lQGV4YW1wbGUuY29tIsQBSAEACW1haWwgbGlua8YBUQEABGxpbmsEbnVsbMQBUgEAISBhbmQgb25lIGEgcmVhZGVyIHNob3dzIGFzIHRleHQ6IMYBcwEABGxpbmsYImZ0cDovL2V4YW1wbGUuY29tL2ZpbGUixAF0AQAEdGhpc8YBeAEABGxpbmsEbnVsbAA=",
+        "AQIBekYBAgZpdGFsaWMEdHJ1ZcYBBwEIBml0YWxpYwRudWxsAA=="
+      ],
+      "state": "ASsBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRgEABGJvbGQEdHJ1ZcQBAgEABGJvbGTGAQYBAARib2xkBG51bGzEAQcBAAEgxgEIAQAGaXRhbGljBHRydWXEAQkBAAZpdGFsaWPGAQ8BAAZpdGFsaWMEbnVsbMQBEAEAASDGAREBAARib2xkBHRydWXGARIBAAZpdGFsaWMEdHJ1ZcQBEwEABGJvdGjGARcBAARib2xkBG51bGzGARgBAAZpdGFsaWMEbnVsbMQBGQEAASDGARoBAAl1bmRlcmxpbmUEdHJ1ZcQBGwEACXVuZGVybGluZcYBJAEACXVuZGVybGluZQRudWxsxAElAQABIMYBJgEABnN0cmlrZQR0cnVlxAEnAQAGc3RyaWtlxgEtAQAGc3RyaWtlBG51bGzEAS4BAAEgxgEvAQAEY29kZQR0cnVlxAEwAQAEY29kZcYBNAEABGNvZGUEbnVsbMcBNQEAASgAATYEdHlwZQF3CXBhcmFncmFwaMQBNgEAAkEgxgE5AQAEbGluaxYiaHR0cHM6Ly9leGFtcGxlLmNvbS8ixAE6AQAId2ViIGxpbmvGAUIBAARsaW5rBG51bGzEAUMBAAQsIGEgxgFHAQAEbGluaxwibWFpbHRvOnNvbWVvbmVAZXhhbXBsZS5jb20ixAFIAQAJbWFpbCBsaW5rxgFRAQAEbGluawRudWxsxAFSAQAhIGFuZCBvbmUgYSByZWFkZXIgc2hvd3MgYXMgdGV4dDogxgFzAQAEbGluaxgiZnRwOi8vZXhhbXBsZS5jb20vZmlsZSLEAXQBAAR0aGlzxgF4AQAEbGluawRudWxsRgECBml0YWxpYwR0cnVlxgEHAQgGaXRhbGljBG51bGwA",
+      "stateVector": "AQF8",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "bold",
+          "attributes": {
+            "bold": true,
+            "italic": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "italic",
+          "attributes": {
+            "italic": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "both",
+          "attributes": {
+            "bold": true,
+            "italic": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "underline",
+          "attributes": {
+            "underline": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "strike",
+          "attributes": {
+            "strike": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "code",
+          "attributes": {
+            "code": true
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A "
+        },
+        {
+          "insert": "web link",
+          "attributes": {
+            "link": "https://example.com/"
+          }
+        },
+        {
+          "insert": ", a "
+        },
+        {
+          "insert": "mail link",
+          "attributes": {
+            "link": "mailto:someone@example.com"
+          }
+        },
+        {
+          "insert": " and one a reader shows as text: "
+        },
+        {
+          "insert": "this",
+          "attributes": {
+            "link": "ftp://example.com/file"
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "bold italic both underline strike code\nA web link, a mail link and one a reader shows as text: this",
+      "projectionLength": 99,
+      "paragraphs": [
+        {
+          "text": "bold italic both underline strike code",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A web link, a mail link and one a reader shows as text: this",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "embed",
+      "description": "An embed is a Y.Map with a type and a fallback. A reader that does not know its type shows the fallback as a placeholder and keeps the embed unchanged. Every embed projects to one U+FFFC.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQYBAkQBAA9BIHBsYWNlaG9sZGVyOiDHARABAAEoAAERBHR5cGUBdwdleGFtcGxlKAABEQhmYWxsYmFjawF3ClthbiBlbWJlZF0oAAERBGRhdGEBdw1rZXB0IGFzIGl0IGlzxAERAQABLgA="
+      ],
+      "state": "AQgBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEAD0EgcGxhY2Vob2xkZXI6IMcBEAEAASgAAREEdHlwZQF3B2V4YW1wbGUoAAERCGZhbGxiYWNrAXcKW2FuIGVtYmVkXSgAAREEZGF0YQF3DWtlcHQgYXMgaXQgaXPEAREBAAEuAA==",
+      "stateVector": "AQEW",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "A placeholder: "
+        },
+        {
+          "insert": {
+            "map": {
+              "data": "kept as it is",
+              "fallback": "[an embed]",
+              "type": "example"
+            }
+          }
+        },
+        {
+          "insert": "."
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "A placeholder: ￼.",
+      "projectionLength": 17,
+      "paragraphs": [
+        {
+          "text": "A placeholder: ￼.",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "image",
+      "description": "An embed of type image: metadata, a JPEG preview, and the original in parts. The writer inserts the embed with its preview first, then appends each part in a change of its own. All parts are there and their SHA-256 matches, so a reader shows the original.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQ4BAkQBAApBIHBpY3R1cmU6xwELAQABKAABDAR0eXBlAXcJcGFyYWdyYXBoxwEMAQABKAABDgR0eXBlAXcFaW1hZ2UoAAEOCGZhbGxiYWNrAXcKW2RvdHMucG5nXSgAAQ4EbWltZQF3CWltYWdlL3BuZygAAQ4EbmFtZQF3CGRvdHMucG5nKAABDgV3aWR0aAF9AigAAQ4GaGVpZ2h0AX0CKAABDgRzaXplAX2SASgAAQ4Gc2hhMjU2AXdANWVlYmVmY2UyZDFiOGQxYTMwNjI1OWY1MWZjOGE5ZjRhYWUxZWEzZjI3ZDNiNGVmM2Y1ZDU4N2M3MDBiMzFhMiMAAQ4HcHJldmlld7YF/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2ScAAQ4FcGFydHMAAA==",
+        "AQEBGQMAARgyiVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGUlEQVR42mOQmvLj/20A",
+        "AQEBGoMBGSCN1f8Zfm5U/s8ABABYQAgfWOEuXQAAAABJRU5ErkJgggA="
+      ],
+      "state": "ARIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEACkEgcGljdHVyZTrHAQsBAAEoAAEMBHR5cGUBdwlwYXJhZ3JhcGjHAQwBAAEoAAEOBHR5cGUBdwVpbWFnZSgAAQ4IZmFsbGJhY2sBdwpbZG90cy5wbmddKAABDgRtaW1lAXcJaW1hZ2UvcG5nKAABDgRuYW1lAXcIZG90cy5wbmcoAAEOBXdpZHRoAX0CKAABDgZoZWlnaHQBfQIoAAEOBHNpemUBfZIBKAABDgZzaGEyNTYBd0A1ZWViZWZjZTJkMWI4ZDFhMzA2MjU5ZjUxZmM4YTlmNGFhZTFlYTNmMjdkM2I0ZWYzZjVkNTg3YzcwMGIzMWEyIwABDgdwcmV2aWV3tgX/2P/gABBKRklGAAEBAABIAEgAAP/AABEIAAIAAgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAQEBAQEBAYEBAYJBgYGCQwJCQkJDA8MDAwMDA8SDw8PDw8PEhISEhISEhIVFRUVFRUZGRkZGRwcHBwcHBwcHBz/2wBDAQQFBQcHBwwHBwwdFBAUHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/3QAEAAH/2gAMAwEAAhEDEQA/APsrSvCHhOXS7OWXRLB3eCNmZraIkkqCSSV5Jq//AMIZ4P8A+gFp/wD4Cxf/ABNaejf8gex/694v/QBWlXYe8f/ZJwABDgVwYXJ0cwADAAEYMolQTkcNChoKAAAADUlIRFIAAAACAAAAAggGAAAAcrYNJAAAABlJREFUeNpjkJry4/9tgwEZII3V/xl+blT+zwAEAFhACB9Y4S5dAAAAAElFTkSuQmCCAA==",
+      "stateVector": "AQEb",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "A picture:"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "fallback": "[dots.png]",
+              "height": 2,
+              "mime": "image/png",
+              "name": "dots.png",
+              "parts": {
+                "array": [
+                  {
+                    "binary": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGUlEQVR42mOQmvLj/20="
+                  },
+                  {
+                    "binary": "jdX/GX5uVP7PAAQAWEAIH1jhLl0AAAAASUVORK5CYII="
+                  }
+                ]
+              },
+              "preview": {
+                "binary": "/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2Q=="
+              },
+              "sha256": "5eebefce2d1b8d1a306259f51fc8a9f4aae1ea3f27d3b4ef3f5d587c700b31a2",
+              "size": 82,
+              "type": "image",
+              "width": 2
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "A picture:\n￼",
+      "projectionLength": 12,
+      "paragraphs": [
+        {
+          "text": "A picture:",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "￼",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ],
+      "images": [
+        {
+          "unit": 11,
+          "shows": "original"
+        }
+      ]
+    },
+    {
+      "name": "image-parts-missing",
+      "description": "The image vector's first two updates only: the embed has arrived with its preview, its parts not yet. A reader shows the preview until the original is complete.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQ4BAkQBAApBIHBpY3R1cmU6xwELAQABKAABDAR0eXBlAXcJcGFyYWdyYXBoxwEMAQABKAABDgR0eXBlAXcFaW1hZ2UoAAEOCGZhbGxiYWNrAXcKW2RvdHMucG5nXSgAAQ4EbWltZQF3CWltYWdlL3BuZygAAQ4EbmFtZQF3CGRvdHMucG5nKAABDgV3aWR0aAF9AigAAQ4GaGVpZ2h0AX0CKAABDgRzaXplAX2SASgAAQ4Gc2hhMjU2AXdANWVlYmVmY2UyZDFiOGQxYTMwNjI1OWY1MWZjOGE5ZjRhYWUxZWEzZjI3ZDNiNGVmM2Y1ZDU4N2M3MDBiMzFhMiMAAQ4HcHJldmlld7YF/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2ScAAQ4FcGFydHMAAA=="
+      ],
+      "state": "ARABAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEACkEgcGljdHVyZTrHAQsBAAEoAAEMBHR5cGUBdwlwYXJhZ3JhcGjHAQwBAAEoAAEOBHR5cGUBdwVpbWFnZSgAAQ4IZmFsbGJhY2sBdwpbZG90cy5wbmddKAABDgRtaW1lAXcJaW1hZ2UvcG5nKAABDgRuYW1lAXcIZG90cy5wbmcoAAEOBXdpZHRoAX0CKAABDgZoZWlnaHQBfQIoAAEOBHNpemUBfZIBKAABDgZzaGEyNTYBd0A1ZWViZWZjZTJkMWI4ZDFhMzA2MjU5ZjUxZmM4YTlmNGFhZTFlYTNmMjdkM2I0ZWYzZjVkNTg3YzcwMGIzMWEyIwABDgdwcmV2aWV3tgX/2P/gABBKRklGAAEBAABIAEgAAP/AABEIAAIAAgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAQEBAQEBAYEBAYJBgYGCQwJCQkJDA8MDAwMDA8SDw8PDw8PEhISEhISEhIVFRUVFRUZGRkZGRwcHBwcHBwcHBz/2wBDAQQFBQcHBwwHBwwdFBAUHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/3QAEAAH/2gAMAwEAAhEDEQA/APsrSvCHhOXS7OWXRLB3eCNmZraIkkqCSSV5Jq//AMIZ4P8A+gFp/wD4Cxf/ABNaejf8gex/694v/QBWlXYe8f/ZJwABDgVwYXJ0cwAA",
+      "stateVector": "AQEZ",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "A picture:"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "fallback": "[dots.png]",
+              "height": 2,
+              "mime": "image/png",
+              "name": "dots.png",
+              "parts": {
+                "array": []
+              },
+              "preview": {
+                "binary": "/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2Q=="
+              },
+              "sha256": "5eebefce2d1b8d1a306259f51fc8a9f4aae1ea3f27d3b4ef3f5d587c700b31a2",
+              "size": 82,
+              "type": "image",
+              "width": 2
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "A picture:\n￼",
+      "projectionLength": 12,
+      "paragraphs": [
+        {
+          "text": "A picture:",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "￼",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ],
+      "images": [
+        {
+          "unit": 11,
+          "shows": "preview"
+        }
+      ]
+    },
+    {
+      "name": "unknown-and-out-of-range",
+      "description": "What a reader does not know it keeps unchanged: an unknown block value and paragraph key, an unknown format, a known format with an unknown value, an image of an unknown type, and a format on a paragraph end. Values out of range count as absent: indent only from 1 to 8 and only on list items and body text, checked only on a checklist item, start only at an ordered list's first item. The name example is never defined by this profile.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "ATMBAkQBAA1Vbmtub3duIHN0eWxlxwEOAQABKAABDwVibG9jawF3B2V4YW1wbGUoAAEPB2V4YW1wbGUBdwRrZXB0KAABDwR0eXBlAXcJcGFyYWdyYXBoxAEPAQATSW5kZW50IG91dCBvZiByYW5nZccBJQEAASgAASYFYmxvY2sBdwZidWxsZXQoAAEmBmluZGVudAF9CSgAASYEdHlwZQF3CXBhcmFncmFwaMQBJgEAGUEgaGVhZGluZyB0YWtlcyBubyBpbmRlbnTHAUIBAAEoAAFDBWJsb2NrAXcCaDIoAAFDBmluZGVudAF9AigAAUMEdHlwZQF3CXBhcmFncmFwaMQBQwEAIE9ubHkgYSBjaGVja2xpc3QgaXRlbSBpcyBjaGVja2VkxwFmAQABKAABZwVibG9jawF3BmJ1bGxldCgAAWcHY2hlY2tlZAF4KAABZwR0eXBlAXcJcGFyYWdyYXBoxAFnAQASU3RhcnQgb3V0IG9mIHJhbmdlxwF8AQABKAABfQVibG9jawF3B29yZGVyZWQoAAF9BXN0YXJ0AX1BKAABfQR0eXBlAXcJcGFyYWdyYXBoxAF9AQAbU3RhcnQgbm90IGF0IHRoZSBmaXJzdCBpdGVtxwGbAQEAASgAAZwBBWJsb2NrAXcHb3JkZXJlZCgAAZwBBXN0YXJ0AX0HKAABnAEEdHlwZQF3CXBhcmFncmFwaMYBnAEBAAdleGFtcGxlBHRydWXEAaABAQARQW4gdW5rbm93biBmb3JtYXTGAbEBAQAHZXhhbXBsZQRudWxsxAGyAQEABSBhbmQgxgG3AQEABGJvbGQJImV4YW1wbGUixAG4AQEAGmJvbGQgd2l0aCBhbiB1bmtub3duIHZhbHVlxgHSAQEABGJvbGQEbnVsbMcB0wEBAAEoAAHUAQR0eXBlAXcJcGFyYWdyYXBoxAHUAQEAL0FuIGltYWdlIG9mIGEgdHlwZSB0aGlzIHZlcnNpb24gZG9lcyBub3Qga25vdzogxwGEAgEAASgAAYUCBHR5cGUBdwVpbWFnZSgAAYUCCGZhbGxiYWNrAXcJW2RyYXdpbmddKAABhQIEbWltZQF3DWltYWdlL2V4YW1wbGUoAAGFAgRuYW1lAXcHZHJhd2luZygAAYUCBXdpZHRoAX0CKAABhQIGaGVpZ2h0AX0CKAABhQIEc2l6ZQF9kgEoAAGFAgZzaGEyNTYBd0AwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIwABhQIHcHJldmlld7YF/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2ScAAYUCBXBhcnRzAAA=",
+        "AQIBkAJGAQIEYm9sZAR0cnVlxgEPARMEYm9sZARudWxsAA=="
+      ],
+      "state": "ATcBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEADVVua25vd24gc3R5bGXHAQ4BAAEoAAEPBWJsb2NrAXcHZXhhbXBsZSgAAQ8HZXhhbXBsZQF3BGtlcHQoAAEPBHR5cGUBdwlwYXJhZ3JhcGjEAQ8BABNJbmRlbnQgb3V0IG9mIHJhbmdlxwElAQABKAABJgVibG9jawF3BmJ1bGxldCgAASYGaW5kZW50AX0JKAABJgR0eXBlAXcJcGFyYWdyYXBoxAEmAQAZQSBoZWFkaW5nIHRha2VzIG5vIGluZGVudMcBQgEAASgAAUMFYmxvY2sBdwJoMigAAUMGaW5kZW50AX0CKAABQwR0eXBlAXcJcGFyYWdyYXBoxAFDAQAgT25seSBhIGNoZWNrbGlzdCBpdGVtIGlzIGNoZWNrZWTHAWYBAAEoAAFnBWJsb2NrAXcGYnVsbGV0KAABZwdjaGVja2VkAXgoAAFnBHR5cGUBdwlwYXJhZ3JhcGjEAWcBABJTdGFydCBvdXQgb2YgcmFuZ2XHAXwBAAEoAAF9BWJsb2NrAXcHb3JkZXJlZCgAAX0Fc3RhcnQBfUEoAAF9BHR5cGUBdwlwYXJhZ3JhcGjEAX0BABtTdGFydCBub3QgYXQgdGhlIGZpcnN0IGl0ZW3HAZsBAQABKAABnAEFYmxvY2sBdwdvcmRlcmVkKAABnAEFc3RhcnQBfQcoAAGcAQR0eXBlAXcJcGFyYWdyYXBoxgGcAQEAB2V4YW1wbGUEdHJ1ZcQBoAEBABFBbiB1bmtub3duIGZvcm1hdMYBsQEBAAdleGFtcGxlBG51bGzEAbIBAQAFIGFuZCDGAbcBAQAEYm9sZAkiZXhhbXBsZSLEAbgBAQAaYm9sZCB3aXRoIGFuIHVua25vd24gdmFsdWXGAdIBAQAEYm9sZARudWxsxwHTAQEAASgAAdQBBHR5cGUBdwlwYXJhZ3JhcGjEAdQBAQAvQW4gaW1hZ2Ugb2YgYSB0eXBlIHRoaXMgdmVyc2lvbiBkb2VzIG5vdCBrbm93OiDHAYQCAQABKAABhQIEdHlwZQF3BWltYWdlKAABhQIIZmFsbGJhY2sBdwlbZHJhd2luZ10oAAGFAgRtaW1lAXcNaW1hZ2UvZXhhbXBsZSgAAYUCBG5hbWUBdwdkcmF3aW5nKAABhQIFd2lkdGgBfQIoAAGFAgZoZWlnaHQBfQIoAAGFAgRzaXplAX2SASgAAYUCBnNoYTI1NgF3QDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAjAAGFAgdwcmV2aWV3tgX/2P/gABBKRklGAAEBAABIAEgAAP/AABEIAAIAAgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2wBDAAQEBAQEBAYEBAYJBgYGCQwJCQkJDA8MDAwMDA8SDw8PDw8PEhISEhISEhIVFRUVFRUZGRkZGRwcHBwcHBwcHBz/2wBDAQQFBQcHBwwHBwwdFBAUHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/3QAEAAH/2gAMAwEAAhEDEQA/APsrSvCHhOXS7OWXRLB3eCNmZraIkkqCSSV5Jq//AMIZ4P8A+gFp/wD4Cxf/ABNaejf8gex/694v/QBWlXYe8f/ZJwABhQIFcGFydHMARgECBGJvbGQEdHJ1ZcYBDwETBGJvbGQEbnVsbAA=",
+      "stateVector": "AQGSAg==",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Unknown style",
+          "attributes": {
+            "bold": true
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "example",
+              "example": "kept",
+              "type": "paragraph"
+            }
+          },
+          "attributes": {
+            "bold": true
+          }
+        },
+        {
+          "insert": "Indent out of range"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "bullet",
+              "indent": 9,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A heading takes no indent"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "h2",
+              "indent": 2,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Only a checklist item is checked"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "bullet",
+              "checked": true,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Start out of range"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "start": -1,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "Start not at the first item"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "ordered",
+              "start": 7,
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "An unknown format",
+          "attributes": {
+            "example": true
+          }
+        },
+        {
+          "insert": " and "
+        },
+        {
+          "insert": "bold with an unknown value",
+          "attributes": {
+            "bold": "example"
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "An image of a type this version does not know: "
+        },
+        {
+          "insert": {
+            "map": {
+              "fallback": "[drawing]",
+              "height": 2,
+              "mime": "image/example",
+              "name": "drawing",
+              "parts": {
+                "array": []
+              },
+              "preview": {
+                "binary": "/9j/4AAQSkZJRgABAQAASABIAAD/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/90ABAAB/9oADAMBAAIRAxEAPwD7K0rwh4Tl0uzll0Swd3gjZma2iJJKgkkleSav/wDCGeD/APoBaf8A+AsX/wATWno3/IHsf+veL/0AVpV2HvH/2Q=="
+              },
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "size": 82,
+              "type": "image",
+              "width": 2
+            }
+          }
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Unknown style\nIndent out of range\nA heading takes no indent\nOnly a checklist item is checked\nStart out of range\nStart not at the first item\nAn unknown format and bold with an unknown value\nAn image of a type this version does not know: ￼",
+      "projectionLength": 237,
+      "paragraphs": [
+        {
+          "text": "Unknown style",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Indent out of range",
+          "block": "bullet",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A heading takes no indent",
+          "block": "h2",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Only a checklist item is checked",
+          "block": "bullet",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "Start out of range",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 1
+        },
+        {
+          "text": "Start not at the first item",
+          "block": "ordered",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": 2
+        },
+        {
+          "text": "An unknown format and bold with an unknown value",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "An image of a type this version does not know: ￼",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ],
+      "images": [
+        {
+          "unit": 236,
+          "shows": "fallback"
+        }
+      ]
+    },
+    {
+      "name": "table-cells",
+      "description": "Paragraph ends with the keys table, row and col end table cells. A cell's end projects to a tab when the next paragraph end is a cell of the same table and row, else to a line feed; the document's last end still projects to nothing. Until tables are defined further, a reader shows each cell as a paragraph.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "ASgBAkQBAAZCZWZvcmXHAQcBAAEoAAEIBHR5cGUBdwlwYXJhZ3JhcGjEAQgBAAFBxwEKAQABKAABCwV0YWJsZQF3AnQxKAABCwNyb3cBdwJyMSgAAQsDY29sAXcCYzEoAAELBHR5cGUBdwlwYXJhZ3JhcGjEAQsBAAFCxwEQAQABKAABEQV0YWJsZQF3AnQxKAABEQNyb3cBdwJyMSgAAREDY29sAXcCYzIoAAERBHR5cGUBdwlwYXJhZ3JhcGjEAREBAAFDxwEWAQABKAABFwV0YWJsZQF3AnQxKAABFwNyb3cBdwJyMigAARcDY29sAXcCYzEoAAEXBHR5cGUBdwlwYXJhZ3JhcGjEARcBAAFExwEcAQABKAABHQV0YWJsZQF3AnQxKAABHQNyb3cBdwJyMigAAR0DY29sAXcCYzIoAAEdBHR5cGUBdwlwYXJhZ3JhcGjEAR0BAAVBZnRlcscBJgEAASgAAScEdHlwZQF3CXBhcmFncmFwaMQBJwEAAUXHASkBAAEoAAEqBXRhYmxlAXcCdDIoAAEqA3JvdwF3AnIxKAABKgNjb2wBdwJjMSgAASoEdHlwZQF3CXBhcmFncmFwaMQBKgEAAUYoAAEABXRhYmxlAXcCdDIoAAEAA3JvdwF3AnIxKAABAANjb2wBdwJjMgA="
+      ],
+      "state": "ASoBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABkJlZm9yZccBBwEAASgAAQgEdHlwZQF3CXBhcmFncmFwaMQBCAEAAUHHAQoBAAEoAAELBXRhYmxlAXcCdDEoAAELA3JvdwF3AnIxKAABCwNjb2wBdwJjMSgAAQsEdHlwZQF3CXBhcmFncmFwaMQBCwEAAULHARABAAEoAAERBXRhYmxlAXcCdDEoAAERA3JvdwF3AnIxKAABEQNjb2wBdwJjMigAAREEdHlwZQF3CXBhcmFncmFwaMQBEQEAAUPHARYBAAEoAAEXBXRhYmxlAXcCdDEoAAEXA3JvdwF3AnIyKAABFwNjb2wBdwJjMSgAARcEdHlwZQF3CXBhcmFncmFwaMQBFwEAAUTHARwBAAEoAAEdBXRhYmxlAXcCdDEoAAEdA3JvdwF3AnIyKAABHQNjb2wBdwJjMigAAR0EdHlwZQF3CXBhcmFncmFwaMQBHQEABUFmdGVyxwEmAQABKAABJwR0eXBlAXcJcGFyYWdyYXBoxAEnAQABRccBKQEAASgAASoFdGFibGUBdwJ0MigAASoDcm93AXcCcjEoAAEqA2NvbAF3AmMxKAABKgR0eXBlAXcJcGFyYWdyYXBoxAEqAQABRigAAQAFdGFibGUBdwJ0MigAAQADcm93AXcCcjEoAAEAA2NvbAF3AmMyAA==",
+      "stateVector": "AQEz",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Before"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "A"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c1",
+              "row": "r1",
+              "table": "t1",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "B"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c2",
+              "row": "r1",
+              "table": "t1",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "C"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c1",
+              "row": "r2",
+              "table": "t1",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "D"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c2",
+              "row": "r2",
+              "table": "t1",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "After"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "E"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c1",
+              "row": "r1",
+              "table": "t2",
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": "F"
+        },
+        {
+          "insert": {
+            "map": {
+              "col": "c2",
+              "row": "r1",
+              "table": "t2",
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Before\nA\tB\nC\tD\nAfter\nE\tF",
+      "projectionLength": 24,
+      "paragraphs": [
+        {
+          "text": "Before",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "A",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "B",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "C",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "D",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "After",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "E",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": "F",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "concurrent",
+      "description": "Three writers. Bob and Carol, each holding Alice's two updates, insert at the same place and set block on the same paragraph end at the same time. Applied in any order, the updates yield one state: Yjs orders the two insertions, and of the two values of block one wins, the same for every replica.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQEBAkQBAAVIZWxsbwA=",
+        "AQECAEQBAgRCb2IgAA==",
+        "AQECBCgAAQAFYmxvY2sBdwJoMQA=",
+        "AQEDAEQBAgZDYXJvbCAA",
+        "AQEDBigAAQAFYmxvY2sBdwZidWxsZXQA"
+      ],
+      "state": "AwIDAEQBAgZDYXJvbCAoAAEABWJsb2NrAXcGYnVsbGV0AgIARAECBEJvYiAhAAEABWJsb2NrAQMBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABUhlbGxvAQIBBAE=",
+      "stateVector": "AwMHAgUBBw==",
+      "deleted": "AAECAQQB",
+      "content": [
+        {
+          "insert": "Bob Carol Hello"
+        },
+        {
+          "insert": {
+            "map": {
+              "block": "bullet",
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Bob Carol Hello",
+      "projectionLength": 15,
+      "paragraphs": [
+        {
+          "text": "Bob Carol Hello",
+          "block": "bullet",
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "deletions",
+      "description": "Deleting text, then the paragraph end between two paragraphs, which joins them: the joined paragraph has the keys of the end that remains, here none. The state's deleted items are what the canonical encoding of deletions lists.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQUBAkQBABVIZWxsbyBicmF2ZSBuZXcgd29ybGTHARYBAAEoAAEXBWJsb2NrAXcCaDEoAAEXBHR5cGUBdwlwYXJhZ3JhcGjEARcBAAYgYWdhaW4A",
+        "AAEBAQgG",
+        "AAEBARcD"
+      ],
+      "state": "AQgBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABkhlbGxvIMEBBwEABsQBDQEACW5ldyB3b3JsZMEBFgEAAQACxAEXAQAGIGFnYWluAQECCAYXAw==",
+      "stateVector": "AQEg",
+      "deleted": "AAEBAggGFwM=",
+      "content": [
+        {
+          "insert": "Hello new world again"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Hello new world again",
+      "projectionLength": 21,
+      "paragraphs": [
+        {
+          "text": "Hello new world again",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "utf-16",
+      "description": "Offsets count UTF-16 code units: a character outside the Basic Multilingual Plane counts two, a combining accent one of its own.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQEBAkQBABVHcsO8w59lIPCfmIAg8J2EniBlzIEA"
+      ],
+      "state": "AQMBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEAFUdyw7zDn2Ug8J+YgCDwnYSeIGXMgQA=",
+      "stateVector": "AQEQ",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Grüße 😀 𝄞 é"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [],
+      "projection": "Grüße 😀 𝄞 é",
+      "projectionLength": 14,
+      "paragraphs": [
+        {
+          "text": "Grüße 😀 𝄞 é",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "beside-content",
+      "description": "Beside content: a layer, a top-level type named by a layer id (com.example.notes/1), and a top-level type that no layer id names (scratch), which breaks the structure. Neither is part of the projection; a reader keeps both.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQEBAkQBAARUZXh0AA==",
+        "AQEBBigBE2NvbS5leGFtcGxlLm5vdGVzLzECbjEBdxJhIG5vdGUgb24gdGhlIHRleHQA",
+        "AQEBBygBB3NjcmF0Y2gBeAF9AQA="
+      ],
+      "state": "AQUBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABFRleHQoARNjb20uZXhhbXBsZS5ub3Rlcy8xAm4xAXcSYSBub3RlIG9uIHRoZSB0ZXh0KAEHc2NyYXRjaAF4AX0BAA==",
+      "stateVector": "AQEI",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Text"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        }
+      ],
+      "beside": [
+        "com.example.notes/1",
+        "scratch"
+      ],
+      "projection": "Text",
+      "projectionLength": 4,
+      "paragraphs": [
+        {
+          "text": "Text",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    },
+    {
+      "name": "after-the-last-end",
+      "description": "A writer that breaks the structure inserts text after the last paragraph end. A reader still applies and keeps it: the text after the last end is a paragraph of its own, without an end, and since the last unit is no paragraph end, every paragraph end projects to a line feed.",
+      "updates": [
+        "AQIBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoAA==",
+        "AQEBAkQBAAVIZWxsbwA=",
+        "AQEBB4QBAAUgdGFpbAA="
+      ],
+      "state": "AQQBAAcBB2NvbnRlbnQBKAABAAR0eXBlAXcJcGFyYWdyYXBoRAEABUhlbGxvhAEABSB0YWlsAA==",
+      "stateVector": "AQEM",
+      "deleted": "AAA=",
+      "content": [
+        {
+          "insert": "Hello"
+        },
+        {
+          "insert": {
+            "map": {
+              "type": "paragraph"
+            }
+          }
+        },
+        {
+          "insert": " tail"
+        }
+      ],
+      "beside": [],
+      "projection": "Hello\n tail",
+      "projectionLength": 11,
+      "paragraphs": [
+        {
+          "text": "Hello",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        },
+        {
+          "text": " tail",
+          "block": null,
+          "indent": 0,
+          "checked": false,
+          "quote": false,
+          "number": null
+        }
+      ]
+    }
+  ]
+}
