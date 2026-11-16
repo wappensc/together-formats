@@ -7,10 +7,14 @@ namespace `de.wappensc.together.format.*`.
 
 | Format | Definition | Test vectors | Status |
 |---|---|---|---|
-| `de.wappensc.together.format.richtext/1` | [richtext-1/index.html](richtext-1/index.html), published at <https://together-pad.com/formats/richtext-1/> | [richtext-1/vectors.json](richtext-1/vectors.json) | final (15 November 2026) |
+| `de.wappensc.together.format.richtext/1` | <https://wappensc.github.io/together-formats/richtext-1/> (source: [richtext-1/index.html](richtext-1/index.html)) | [richtext-1/vectors.json](richtext-1/vectors.json) | final (15 November 2026) |
 
-The published page is the definition that holds. This repository keeps the same text and the vectors that go
-with it, so that every tag shows which text belongs to which vectors.
+The page this repository publishes on GitHub Pages is the definition that holds. The repository keeps the same
+text and the vectors that go with it, so that every tag shows which text belongs to which vectors.
+
+The address of the definition changed on 16 November 2026, from `https://together-pad.com/formats/richtext-1/`
+to <https://wappensc.github.io/together-formats/richtext-1/>. The format and its test vectors are unchanged; only
+the address that `vectors.json` names under `definition` is new.
 
 ## Using the vectors
 

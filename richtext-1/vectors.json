@@ -1,6 +1,6 @@
 {
   "profile": "de.wappensc.together.format.richtext/1",
-  "definition": "https://together-pad.com/formats/richtext-1/",
+  "definition": "https://wappensc.github.io/together-formats/richtext-1/",
   "about": [
     "Test vectors of the document profile de.wappensc.together.format.richtext/1, defined at the address under definition.",
     "updates: Yjs updates in encoding version 1, Base64. Applied to an empty Yjs document in any order, with duplicates, they yield the state described here.",
